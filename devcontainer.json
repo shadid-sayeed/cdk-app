@@ -1,0 +1,21 @@
+{
+  "name": "Shadid DevBox",
+  "image": "shadid-devbox:latest",
+  "workspaceFolder": "/workspace",
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
+    "source=${localEnv:HOME}/.aws,target=/root/.aws,type=bind,consistency=cached"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "hashicorp.terraform",
+        "ms-python.python",
+        "amazonwebservices.aws-toolkit-vscode",
+        "dbaeumer.vscode-eslint"
+      ]
+    }
+  },
+  "remoteUser": "root",
+  "postStartCommand": "echo 'Devbox ready 🚀'"
+}
