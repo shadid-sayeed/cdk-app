@@ -1,11 +1,14 @@
+// .devcontainer.json  (works only when VS Code is "WSL: Ubuntu")
 {
   "name": "Shadid DevBox",
   "image": "shadid-devbox:latest",
   "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
   "mounts": [
     "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
-    "source=${localEnv:HOME}/.aws,target=/root/.aws,type=bind,consistency=cached"
+    "source=/home/shadid/.aws,target=/root/.aws,type=bind,consistency=cached"
   ],
+  "remoteUser": "root",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -16,6 +19,5 @@
       ]
     }
   },
-  "remoteUser": "root",
   "postStartCommand": "echo 'Devbox ready 🚀'"
 }
