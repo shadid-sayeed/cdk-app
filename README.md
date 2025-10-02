@@ -1,1 +1,1 @@
-# cdk-app prepared by Shadid Sayeed
+# cdk-app prepared by Shadid Sayeed.
