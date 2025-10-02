@@ -105,8 +105,10 @@ COPY --from=build-tools /usr/local/bin/tflint /usr/local/bin/
 COPY --from=build-tools /usr/local/bin/kubectl /usr/local/bin/
 COPY --from=build-tools /usr/local/aws-cli /usr/local/aws-cli
 
-RUN ln -sf /usr/local/aws-cli/v2/current/bin/aws /usr/local/bin/aws && \
-    aws --version && \
+RUN apt-get purge -y awscli || true && \
+    rm -f /usr/local/bin/aws /usr/bin/aws /bin/aws && \
+    ln -s /usr/local/aws-cli/v2/current/bin/aws /usr/local/bin/aws && \
+    /usr/local/bin/aws --version && \
     ls -l /usr/local/bin/aws && readlink -f /usr/local/bin/aws
 
 # --- Make 'vscode' the non-root dev user with Docker + sudo + npm global prefix ---
