@@ -68,10 +68,14 @@ RUN source /archmap && \
     rm -rf /tmp/tflint* 
 
 # AWS CLI v2
-RUN source /archmap && \
-    curl -sSL "https://awscli.amazonaws.com/awscli-exe-linux-${AWS_ARCH}.zip" -o "/tmp/awscliv2.zip" && \
+# AWS CLI v2 (install to fixed dirs so we can copy them later)
+RUN source /archmap && set -e; \
+    curl -fL --retry 3 --retry-delay 2 \
+      "https://awscli.amazonaws.com/awscli-exe-linux-${AWS_ARCH}.zip" \
+      -o /tmp/awscliv2.zip && \
     unzip -q /tmp/awscliv2.zip -d /tmp && \
-    /tmp/aws/install && rm -rf /tmp/aws /tmp/awscliv2.zip
+    /tmp/aws/install -i /usr/local/aws-cli -b /usr/local/bin && \
+    rm -rf /tmp/aws /tmp/awscliv2.zip
 
 # =======================
 # Stage 2: runtime
