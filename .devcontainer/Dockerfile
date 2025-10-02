@@ -101,11 +101,13 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
 COPY --from=build-tools /usr/bin/terraform /usr/local/bin/
 COPY --from=build-tools /usr/local/bin/terragrunt /usr/local/bin/
 COPY --from=build-tools /usr/local/bin/terraform-docs /usr/local/bin/
-COPY --from=build-tools /usr/local/bin/aws /usr/local/bin/
 COPY --from=build-tools /usr/local/bin/tflint /usr/local/bin/
 COPY --from=build-tools /usr/local/bin/kubectl /usr/local/bin/
-COPY --from=build-tools /usr/local/bin/aws /usr/local/bin/
 COPY --from=build-tools /usr/local/aws-cli /usr/local/aws-cli
+
+RUN ln -sf /usr/local/aws-cli/v2/current/bin/aws /usr/local/bin/aws && \
+    aws --version && \
+    ls -l /usr/local/bin/aws && readlink -f /usr/local/bin/aws
 
 # --- Make 'vscode' the non-root dev user with Docker + sudo + npm global prefix ---
 ARG USERNAME=vscode
