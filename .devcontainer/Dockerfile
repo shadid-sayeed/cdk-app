@@ -100,6 +100,35 @@ COPY --from=build-tools /usr/local/bin/terraform-docs /usr/local/bin/
 COPY --from=build-tools /usr/local/bin/aws /usr/local/bin/
 COPY --from=build-tools /usr/local/bin/tflint /usr/local/bin/
 COPY --from=build-tools /usr/local/bin/kubectl /usr/local/bin/
+COPY --from=build-tools /usr/local/bin/aws /usr/local/bin/
+COPY --from=build-tools /usr/local/aws-cli /usr/local/aws-cli
+
+# --- Make 'vscode' the non-root dev user with Docker + sudo + npm global prefix ---
+ARG USERNAME=vscode
+ARG USER_UID=1000
+ARG USER_GID=1000
+
+RUN set -euo pipefail; \
+    if ! id -u ${USERNAME} >/dev/null 2>&1; then \
+      groupadd --gid ${USER_GID} ${USERNAME}; \
+      useradd -s /bin/bash --uid ${USER_UID} --gid ${USER_GID} -m ${USERNAME}; \
+    fi; \
+    apt-get update -y && apt-get install -y sudo && apt-get clean && rm -rf /var/lib/apt/lists/*; \
+    echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/99-${USERNAME}; \
+    chmod 0440 /etc/sudoers.d/99-${USERNAME}; \
+    if [ -S /var/run/docker.sock ]; then \
+      DOCKER_GID=$(stat -c '%g' /var/run/docker.sock); \
+      if ! getent group docker >/dev/null; then groupadd -g "${DOCKER_GID}" docker; else groupmod -g "${DOCKER_GID}" docker || true; fi; \
+      usermod -aG docker ${USERNAME} || true; \
+    else \
+      getent group docker >/dev/null || groupadd -g 999 docker; \
+      usermod -aG docker ${USERNAME} || true; \
+    fi; \
+    su - ${USERNAME} -c 'mkdir -p ~/.npm-global && npm config set prefix ~/.npm-global'; \
+    echo 'export PATH="$HOME/.npm-global/bin:$PATH"' > /etc/profile.d/10-npm-global.sh
+
+# (Optional) Set default user for runtime container
+USER ${USERNAME}
 
 # (Optional) Print versions in build logs
 RUN echo -e "\n== Tool Versions ==" && \
