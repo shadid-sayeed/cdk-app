@@ -127,6 +127,11 @@ RUN set -euo pipefail; \
     su - ${USERNAME} -c 'mkdir -p ~/.npm-global && npm config set prefix ~/.npm-global'; \
     echo 'export PATH="$HOME/.npm-global/bin:$PATH"' > /etc/profile.d/10-npm-global.sh
 
+USER root
+
+# --- Ensure workspace dir exists for bind mount ---
+RUN mkdir -p /workspace && chown -R vscode:vscode /workspace
+
 # (Optional) Set default user for runtime container
 USER ${USERNAME}
 
