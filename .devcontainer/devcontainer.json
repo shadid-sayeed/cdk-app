@@ -11,7 +11,6 @@
     "source=/home/shadid/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached"
   ],
   "remoteUser": "vscode",
-  "postStartCommand": "bash -lc 'chmod 700 /home/vscode/.ssh || true; chmod 600 /home/vscode/.ssh/id_* 2>/dev/null || true; touch /home/vscode/.ssh/known_hosts; ssh-keyscan -T 5 github.com >> /home/vscode/.ssh/known_hosts 2>/dev/null || true; chown -R vscode:vscode /home/vscode/.ssh'"
   "customizations": {
     "vscode": {
       "extensions": [
