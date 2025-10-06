@@ -1,7 +1,7 @@
 import * as iam from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 
-export function crateLambdaRole(scope: Construct, iconSourceName: String, iconDestName: String): iam.role {
+export function createLambdaRole(scope: Construct, iconSourceName: String, iconDestName: String): iam.Role {
     const lambdaRole = new iam.Role(scope, 'LambdaExecutoinRole', {
         assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
         managedPolicies: [
